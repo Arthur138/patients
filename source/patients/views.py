@@ -1,13 +1,13 @@
-from rest_framework import status
-from rest_framework.response import Response
+from rest_framework.permissions import DjangoObjectPermissions
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from .models import Patient
 from .serializers import PatientSerializer
-from .permissions import IsDoctorPermission
-
 
 class PatientListView(APIView):
-    permission_classes = [IsDoctorPermission]
+    permission_classes = [DjangoObjectPermissions]
+    queryset = Patient.objects.none()
 
     def get(self, request, *args, **kwargs):
         patients = Patient.objects.all()
