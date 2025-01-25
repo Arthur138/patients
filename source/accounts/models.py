@@ -1,6 +1,7 @@
 from django.core.validators import RegexValidator
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.core.exceptions import ValidationError
 
 phone_number_validator = RegexValidator(
     regex=r'^996\d{3}\d{2}\d{2}\d{2}$',
@@ -10,13 +11,15 @@ phone_number_validator = RegexValidator(
 class AccountManager(BaseUserManager):
     use_in_migrations = True
 
-    def _create_user(self, username, name, phone, password, **extra_fields):
+    def _create_user(self, username, name, phone, password=None, **extra_fields):
         if not username:
             raise ValueError('Поле username должно быть заполнено')
         if not name:
             raise ValueError('Поле name должно быть заполнено')
         if not phone:
             raise ValueError('Поле phone должно быть заполнено')
+        if not password:
+            raise ValueError('Поле password должно быть заполнено')
 
         user = self.model(
             username=username,
@@ -24,7 +27,14 @@ class AccountManager(BaseUserManager):
             phone=phone,
             **extra_fields
         )
+
         user.set_password(password)
+
+        try:
+            user.full_clean()
+        except ValidationError as e:
+            raise ValueError(f"Ошибка валидации: {e}")
+
         user.save(using=self._db)
         return user
 
