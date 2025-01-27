@@ -3,7 +3,6 @@ version: '3.9'
 services:
   db:
       image: postgres:16
-      container_name: db
       volumes:
         - postgres_data:/var/lib/postgresql/data
       environment:
@@ -40,8 +39,8 @@ services:
       volumes:
         - ./staticfiles:/main/staticfiles
         - ./source/uploads:/var/www/media
-      links:
-        - db:db
+#      links:
+#        - db:db
       networks:
         - djangonetwork
 
