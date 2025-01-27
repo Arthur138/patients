@@ -8,3 +8,4 @@ class Patient(models.Model):
 
     def __str__(self):
         return f"Patient {self.id}"
+
