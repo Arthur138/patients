@@ -1,4 +1,5 @@
 
+## Env запушен для удобства тестирования
 ## Структура репозитория
 1. `tests` = 'source/patients/tests' , 'source/accounts/tests'
 2. `code` = 'source'
